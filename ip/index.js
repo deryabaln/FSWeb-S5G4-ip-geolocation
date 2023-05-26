@@ -1,6 +1,6 @@
-//axios import buraya gelecek
+import axios from 'axios';
 
-var benimIP;
+var benimIP ;
 
 
 // ------------ değiştirmeyin --------------
@@ -70,3 +70,59 @@ async function ipAdresimiAl(){
 
 
 //kodlar buraya gelecek
+async function getData(){
+	await ipAdresimiAl();
+	let url = "https://apis.ergineer.com/ipgeoapi/"+benimIP;
+	const geoLocation = axios.get(url)
+	geoLocation.then(res => {
+		console.log(res.data);
+		document.querySelector(".cards").append(cardOlustur(res.data))
+	})
+	.catch(err => {
+		console.log("Error", err);
+	});
+}
+
+getData();
+
+const cardOlustur = ipİnformation => {
+
+const containerDiv = document.createElement("div");
+containerDiv.setAttribute("class", "card");
+
+const image = document.createElement("img");
+image.setAttribute("src","https://flagcdn.com" + "/256x192/" + ipİnformation.ülkeKodu.toLowerCase() + ".png");
+
+const childDiv = document.createElement("div");
+childDiv.setAttribute("class", "card-info");
+
+const baslik = document.createElement("h3");
+baslik.setAttribute("class", "ip");
+baslik.textContent = ipİnformation.sorgu
+
+const p1 = document.createElement("p");
+p1.setAttribute("class", "ulke");
+p1.textContent = ipİnformation.ülkeKodu
+
+const p2 = document.createElement("p");
+p2.textContent = "Enlem: " + ipİnformation.enlem + " Boylam: " + ipİnformation.boylam;
+
+const p3 = document.createElement("p");
+p3.textContent = "Şehir: "+ ipİnformation.bölgeAdı;
+
+const p4 = document.createElement("p");
+p4.textContent = "Saat Dilimi: " + ipİnformation.saatdilimi;
+
+const p5 = document.createElement("p");
+p5.textContent = "Para birimi: " + ipİnformation.parabirimi;
+
+const p6 = document.createElement("p");
+p6.textContent = "ISP: "+ ipİnformation.isp;
+
+childDiv.append(baslik, p1, p2, p3, p4, p5, p6)
+containerDiv.append(image,childDiv)
+
+	return containerDiv
+}
+
+ 
